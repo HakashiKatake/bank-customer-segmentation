@@ -232,17 +232,32 @@ section[data-testid="stSidebar"] [data-testid="stRadio"] label div:last-of-type 
 """, unsafe_allow_html=True)
 
 NEUTRAL = dict(
-    font_family="IBM Plex Mono",
-    font_color="#e0e0e0",
+    font=dict(family="IBM Plex Mono", color="#e0e0e0"),
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
-    title_font_family="IBM Plex Mono",
-    title_font_size=13,
-    title_font_color="#ffffff",
-    legend_font_family="IBM Plex Mono",
-    legend_font_size=11,
-    xaxis=dict(gridcolor="#1f1f1f", linecolor="#2e2e2e", tickfont_family="IBM Plex Mono", tickfont_size=10, zerolinecolor="#1f1f1f"),
-    yaxis=dict(gridcolor="#1f1f1f", linecolor="#2e2e2e", tickfont_family="IBM Plex Mono", tickfont_size=10, zerolinecolor="#1f1f1f"),
+    title=dict(
+        font=dict(family="IBM Plex Mono", size=14, color="#ffffff"),
+        x=0, # Left align title
+        xanchor="left"
+    ),
+    legend=dict(
+        font=dict(family="IBM Plex Mono", size=11, color="#e0e0e0"),
+        bgcolor="rgba(0,0,0,0)"
+    ),
+    xaxis=dict(
+        gridcolor="#222222", 
+        linecolor="#333333", 
+        tickfont=dict(family="IBM Plex Mono", size=10), 
+        zerolinecolor="#222222",
+        title_font=dict(family="IBM Plex Mono", size=10, color="#8a8a82")
+    ),
+    yaxis=dict(
+        gridcolor="#222222", 
+        linecolor="#333333", 
+        tickfont=dict(family="IBM Plex Mono", size=10), 
+        zerolinecolor="#222222",
+        title_font=dict(family="IBM Plex Mono", size=10, color="#8a8a82")
+    ),
 )
 NEUTRAL_SEQ = ["#ffffff", "#cccccc", "#999999", "#666666", "#333333"]
 CATEGORICAL  = ["#ffffff", "#8a8a82", "#5a5a52", "#3a3a3a", "#1f1f1f"]
