@@ -28,160 +28,224 @@ st.markdown("""
 
 html, body, .stApp {
   font-family: 'IBM Plex Sans', monospace;
-  background: #f5f4f0;
-  color: #1a1a1a;
+  background: #0a0a0a;
+  color: #e0e0e0;
 }
 
 /* ── SIDEBAR ── */
 section[data-testid="stSidebar"] {
-  background: #1a1a1a;
-  border-right: 1px solid #2e2e2e;
+  background: #111111;
+  border-right: 1px solid #1f1f1f;
+  min-width: 350px !important;
+  max-width: 350px !important;
 }
-section[data-testid="stSidebar"] * { color: #c8c8c0 !important; }
-section[data-testid="stSidebar"] .stRadio label { color: #c8c8c0 !important; }
-section[data-testid="stSidebar"] hr { border-color: #2e2e2e; }
+section[data-testid="stSidebar"] * { color: #8a8a82 !important; }
+section[data-testid="stSidebar"] .stRadio label { color: #8a8a82 !important; }
+section[data-testid="stSidebar"] hr { border-color: #333333; margin: 0.8rem 0 !important; }
 section[data-testid="stSidebar"] a { color: #8a8a82 !important; text-decoration: underline; }
-section[data-testid="stSidebar"] [data-testid="stInfo"] {
-  background: #252525;
-  border: 1px solid #333;
-  border-radius: 0;
-  color: #8a8a82 !important;
+section[data-testid="stSidebar"] [data-testid="stNotification"], 
+section[data-testid="stSidebar"] [data-testid="stNotificationContent"],
+section[data-testid="stSidebar"] div[role="alert"] {
+  background: #1a1a1a !important;
+  border: 1px solid #333333 !important;
+  border-left: 3px solid #8a8a82 !important;
+  border-radius: 0 !important;
 }
-section[data-testid="stSidebar"] [data-testid="stInfo"] * { color: #8a8a82 !important; }
+section[data-testid="stSidebar"] [data-testid="stNotification"] * { 
+  color: #eeeeee !important; 
+}
 
 /* ── MAIN AREA ── */
 .main .block-container { padding: 2rem 2.5rem; max-width: 1400px; }
-.stApp { background: #f5f4f0; }
+section[data-testid="stSidebar"] .block-container { padding-top: 1rem !important; }
+.stApp { background: #0a0a0a; }
 
 /* ── METRIC CARDS ── */
 div[data-testid="stMetric"] {
-  background: #ffffff;
-  border: 1px solid #d0cfc8;
+  background: #141414;
+  border: 1px solid #1f1f1f;
   border-radius: 0;
   padding: 18px 20px;
 }
 div[data-testid="stMetric"] label { 
-  color: #5a5a52 !important; 
+  color: #8a8a82 !important; 
   font-family: 'IBM Plex Mono', monospace !important;
   font-size: 0.72rem !important;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 div[data-testid="stMetric"] [data-testid="stMetricValue"] { 
-  color: #1a1a1a !important; 
+  color: #ffffff !important; 
   font-family: 'IBM Plex Mono', monospace !important;
   font-size: 1.7rem !important;
   font-weight: 500;
 }
 div[data-testid="stMetric"] [data-testid="stMetricDelta"] { 
-  color: #3a7a3a !important;
+  color: #4ade80 !important;
   font-family: 'IBM Plex Mono', monospace !important;
   font-size: 0.75rem !important;
 }
 
 /* ── BUTTONS ── */
 .stButton > button {
-  background: #1a1a1a;
-  color: #f5f4f0;
-  border: 1px solid #1a1a1a;
+  background: #f5f4f0;
+  color: #0a0a0a;
+  border: 1px solid #f5f4f0;
   border-radius: 0;
   padding: 10px 24px;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.82rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   width: 100%;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+.stButton > button:hover {
+  background: #ffffff;
+  border-color: #ffffff;
 }
 
 /* ── FORM INPUTS ── */
 .stSelectbox label, .stSlider label, .stNumberInput label {
-  color: #5a5a52 !important;
+  color: #8a8a82 !important;
   font-family: 'IBM Plex Mono', monospace !important;
   font-size: 0.72rem !important;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 .stSelectbox > div > div {
-  background: #ffffff;
-  border: 1px solid #d0cfc8;
+  background: #141414;
+  border: 1px solid #1f1f1f;
   border-radius: 0;
-  color: #1a1a1a;
+  color: #ffffff;
 }
 .stNumberInput input {
-  background: #ffffff;
-  border: 1px solid #d0cfc8;
+  background: #141414;
+  border: 1px solid #1f1f1f;
   border-radius: 0;
-  color: #1a1a1a;
+  color: #ffffff;
   font-family: 'IBM Plex Mono', monospace;
 }
 
 /* ── DATAFRAME ── */
-.stDataFrame { border: 1px solid #d0cfc8; }
+.stDataFrame { border: 1px solid #1f1f1f; }
 
 /* ── DIVIDER ── */
-hr { border: none; border-top: 1px solid #d0cfc8; margin: 1.5rem 0; }
+hr { border: none; border-top: 1px solid #1f1f1f; margin: 1.5rem 0; }
+section[data-testid="stSidebar"] hr { margin: 0.8rem 0 !important; }
 
 /* ── ALERT BOXES ── */
-.stSuccess, .stInfo, .stWarning, .stError {
+.stSuccess, .stInfo, .stWarning, .stError, [data-testid="stNotification"] {
   border-radius: 0 !important;
   border-left-width: 3px !important;
 }
 .stSuccess { 
-  background: #f0f7f0 !important; 
-  border-left: 3px solid #3a7a3a !important;
+  background: #061109 !important; 
+  border-left: 3px solid #1e5128 !important;
 }
-.stInfo { 
-  background: #f0f4f7 !important; 
-  border-left: 3px solid #3a5a7a !important;
+.stInfo, [data-testid="stNotification"] { 
+  background: #1a1a1a !important; 
+  border-left: 3px solid #5a5a52 !important;
 }
 .stWarning { 
-  background: #f7f5f0 !important; 
-  border-left: 3px solid #7a6a3a !important;
+  background: #1a1608 !important; 
+  border-left: 3px solid #5a4b1e !important;
 }
-.stSuccess *, .stInfo *, .stWarning * { color: #1a1a1a !important; }
+.stSuccess *, .stInfo *, .stWarning *, [data-testid="stNotification"] * { color: #e0e0e0 !important; }
 
 /* ── PLOTLY CHARTS ── */
-.js-plotly-plot { border: 1px solid #d0cfc8; }
+.js-plotly-plot { border: 1px solid #1f1f1f; }
 
 h1, h2, h3, h4 { 
   font-family: 'IBM Plex Mono', monospace !important;
-  color: #1a1a1a !important;
+  color: #ffffff !important;
   font-weight: 500;
   letter-spacing: -0.01em;
 }
 
-section[data-testid="stSidebar"] .stRadio > div { gap: 4px; }
-section[data-testid="stSidebar"] .stRadio label {
-  padding: 6px 10px;
-  font-family: 'IBM Plex Mono', monospace !important;
-  font-size: 0.78rem !important;
-  letter-spacing: 0.04em;
-  border: 1px solid transparent;
+section[data-testid="stSidebar"] .stRadio > div { gap: 2px; }
+section[data-testid="stSidebar"] .stRadio [data-testid="stWidgetLabel"] {
+    display: none !important;
 }
+
+section[data-testid="stSidebar"] .stRadio label {
+  padding: 14px 20px !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+  color: #cccccc !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+section[data-testid="stSidebar"] .stRadio label:hover {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
 section[data-testid="stSidebar"] .stRadio label[data-selected="true"] {
-  background: #2e2e2e;
-  border: 1px solid #3a3a3a;
+  background: #2e2e2e !important;
+  color: #ffffff !important;
+  border-left: 4px solid #ffffff !important;
+}
+
+/* Hide the radio circle specifically without hiding text */
+section[data-testid="stSidebar"] .stRadio label div[data-testid="stMarkdownContainer"] p {
+    margin-bottom: 0 !important;
+}
+
+section[data-testid="stSidebar"] [data-testid="stRadio"] label div[role="radiogroup"] {
+    display: none !important;
+}
+
+/* target the circle container */
+section[data-testid="stSidebar"] [data-testid="stRadio"] label div:first-of-type {
+    display: none !important;
+}
+
+/* ensure text div is visible */
+section[data-testid="stSidebar"] [data-testid="stRadio"] label div:last-of-type {
+    display: block !important;
+    width: 100%;
+}
+
+/* ── DISABLE SIDEBAR RESIZE ── */
+[data-testid="stSidebarResizer"] {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 NEUTRAL = dict(
     font_family="IBM Plex Mono",
-    font_color="#1a1a1a",
-    paper_bgcolor="#ffffff",
-    plot_bgcolor="#ffffff",
+    font_color="#e0e0e0",
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
     title_font_family="IBM Plex Mono",
     title_font_size=13,
-    title_font_color="#1a1a1a",
+    title_font_color="#ffffff",
     legend_font_family="IBM Plex Mono",
     legend_font_size=11,
-    xaxis=dict(gridcolor="#e8e7e0", linecolor="#d0cfc8", tickfont_family="IBM Plex Mono", tickfont_size=10),
-    yaxis=dict(gridcolor="#e8e7e0", linecolor="#d0cfc8", tickfont_family="IBM Plex Mono", tickfont_size=10),
+    xaxis=dict(gridcolor="#1f1f1f", linecolor="#2e2e2e", tickfont_family="IBM Plex Mono", tickfont_size=10, zerolinecolor="#1f1f1f"),
+    yaxis=dict(gridcolor="#1f1f1f", linecolor="#2e2e2e", tickfont_family="IBM Plex Mono", tickfont_size=10, zerolinecolor="#1f1f1f"),
 )
-NEUTRAL_SEQ = ["#1a1a1a", "#3a3a3a", "#5a5a5a", "#7a7a7a", "#9a9a9a"]
-CATEGORICAL  = ["#1a1a1a", "#5a5a52", "#8a8a82", "#b4b4ac", "#d0cfc8"]
+NEUTRAL_SEQ = ["#ffffff", "#cccccc", "#999999", "#666666", "#333333"]
+CATEGORICAL  = ["#ffffff", "#8a8a82", "#5a5a52", "#3a3a3a", "#1f1f1f"]
 
 
 @st.cache_data
@@ -247,9 +311,9 @@ def chart(fig):
 
 def section(label):
     st.markdown(f"""
-    <div style="border-top:2px solid #1a1a1a; padding-top:10px; margin-top:8px; margin-bottom:18px;">
+    <div style="border-top:2px solid #ffffff; padding-top:10px; margin-top:8px; margin-bottom:18px;">
       <span style="font-family:'IBM Plex Mono',monospace; font-size:0.7rem; letter-spacing:0.12em;
-                   text-transform:uppercase; color:#5a5a52;">
+                   text-transform:uppercase; color:#8a8a82;">
         {label}
       </span>
     </div>""", unsafe_allow_html=True)
@@ -257,10 +321,10 @@ def section(label):
 
 def kv(label, value):
     st.markdown(f"""
-    <div style="border:1px solid #d0cfc8; padding:14px 16px; background:#fff; margin-bottom:4px;">
+    <div style="border:1px solid #1f1f1f; padding:14px 16px; background:#141414; margin-bottom:4px;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem; text-transform:uppercase;
-                  letter-spacing:0.1em; color:#5a5a52; margin-bottom:4px;">{label}</div>
-      <div style="font-family:'IBM Plex Mono',monospace; font-size:1.45rem; color:#1a1a1a; font-weight:500;">{value}</div>
+                  letter-spacing:0.1em; color:#8a8a82; margin-bottom:4px;">{label}</div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:1.45rem; color:#ffffff; font-weight:500;">{value}</div>
     </div>""", unsafe_allow_html=True)
 
 
@@ -275,14 +339,14 @@ def main():
 
     with st.sidebar:
         st.markdown("""
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.95rem;
-                    letter-spacing:0.06em; font-weight:500; color:#f0efe8;
-                    padding:16px 0 4px;">
-          BANKSEG <span style='color:#6a6a60;'>/ AI</span>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:1.15rem;
+                    letter-spacing:0.04em; font-weight:700; color:#ffffff;
+                    padding:0 0 2px;">
+          BANKSEG <span style='color:#8a8a82;'>/ AI</span>
         </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
-                    color:#5a5a52; letter-spacing:0.1em; text-transform:uppercase;
-                    padding-bottom:20px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.72rem;
+                    color:#aaaaaa; letter-spacing:0.12em; text-transform:uppercase;
+                    font-weight:700; padding-bottom:8px;">
           Location Intelligence
         </div>
         """, unsafe_allow_html=True)
@@ -299,7 +363,7 @@ def main():
         st.divider()
         st.markdown("""
         <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
-                    text-transform:uppercase; letter-spacing:0.1em; color:#5a5a52;
+                    text-transform:uppercase; letter-spacing:0.1em; color:#888888;
                     padding-bottom:8px;">
           Dataset
         </div>""", unsafe_allow_html=True)
@@ -307,13 +371,13 @@ def main():
 
 
     st.markdown("""
-    <div style="border-bottom:2px solid #1a1a1a; padding-bottom:20px; margin-bottom:28px;">
+    <div style="border-bottom:2px solid #ffffff; padding-bottom:20px; margin-bottom:28px;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:1.9rem;
-                  font-weight:500; color:#1a1a1a; letter-spacing:-0.01em;">
+                  font-weight:500; color:#ffffff; letter-spacing:-0.01em;">
         BANK LOCATION & DOMAIN INTELLIGENCE
       </div>
       <div style="font-family:'IBM Plex Sans',sans-serif; font-size:0.85rem;
-                  color:#5a5a52; margin-top:6px;">
+                  color:#8a8a82; margin-top:6px;">
         Market Segmentation via K-Means · Domain forecasting via Linear Regression
       </div>
     </div>
@@ -333,16 +397,16 @@ def main():
         st.divider()
         section("Transaction volume over time")
         tr = df.groupby(['Year', 'Month', 'Date'])['Value'].sum().reset_index()
-        fig = px.line(tr, x='Date', y='Value', color_discrete_sequence=['#1a1a1a'])
+        fig = px.line(tr, x='Date', y='Value', color_discrete_sequence=['#ffffff'])
         fig.update_traces(line_width=1.5)
-        st.plotly_chart(chart(fig), use_container_width=True)
+        st.plotly_chart(chart(fig), width='stretch')
 
         st.divider()
         section("Top 10 Locations by Volume")
         top_locs = loc_stats.sort_values('TotalValue', ascending=False).head(10)
-        fig2 = px.bar(top_locs, x='Location', y='TotalValue', color_discrete_sequence=['#1a1a1a'])
+        fig2 = px.bar(top_locs, x='Location', y='TotalValue', color_discrete_sequence=['#ffffff'])
         fig2.update_traces(marker_line_width=0)
-        st.plotly_chart(chart(fig2), use_container_width=True)
+        st.plotly_chart(chart(fig2), width='stretch')
 
 
     elif page == "Market Segments":
@@ -358,7 +422,7 @@ def main():
         fig = px.scatter(pca_df, x='PC1', y='PC2', color='Segment', text='Location',
                          opacity=0.7, color_discrete_sequence=NEUTRAL_SEQ)
         fig.update_traces(marker_size=8, textposition='top center', textfont_size=8, textfont_family="IBM Plex Mono")
-        st.plotly_chart(chart(fig), use_container_width=True)
+        st.plotly_chart(chart(fig), width='stretch')
 
         st.divider()
         col1, col2 = st.columns([1, 2])
@@ -372,16 +436,16 @@ def main():
             section(f"Profile · {seg.lower()}")
             m = seg_df[['TotalValue','TotalTxns','AvgTxnValue','DistinctDomains']].mean().round(1)
             m_df = pd.DataFrame({'Metric': m.index, 'Mean': m.values})
-            fig2 = px.bar(m_df, x='Metric', y='Mean', color_discrete_sequence=['#1a1a1a'])
+            fig2 = px.bar(m_df, x='Metric', y='Mean', color_discrete_sequence=['#ffffff'])
             fig2.update_traces(marker_line_width=0)
-            st.plotly_chart(chart(fig2), use_container_width=True)
+            st.plotly_chart(chart(fig2), width='stretch')
 
         st.divider()
         section("Locations in this segment")
         disp_df = seg_df[['Location', 'TotalValue', 'TotalTxns', 'AvgTxnValue']].sort_values('TotalValue', ascending=False)
         disp_df['TotalValue'] = disp_df['TotalValue'].apply(lambda x: f"₹{x:,.0f}")
         disp_df['TotalTxns']  = disp_df['TotalTxns'].apply(lambda x: f"{x:,.0f}")
-        st.dataframe(disp_df, use_container_width=True, hide_index=True)
+        st.dataframe(disp_df, width='stretch', hide_index=True)
 
 
     elif page == "Domains":
@@ -393,15 +457,15 @@ def main():
 
         c1, c2 = st.columns(2)
         with c1:
-            fig = px.bar(dom_df, x='Domain', y='TotalValue', color_discrete_sequence=['#1a1a1a'])
+            fig = px.bar(dom_df, x='Domain', y='TotalValue', color_discrete_sequence=['#ffffff'])
             fig.update_traces(marker_line_width=0)
             fig.update_layout(title_text="Total Transaction Volume")
-            st.plotly_chart(chart(fig), use_container_width=True)
+            st.plotly_chart(chart(fig), width='stretch')
         with c2:
-            fig2 = px.bar(dom_df, x='Domain', y='TotalTxns', color_discrete_sequence=['#5a5a52'])
+            fig2 = px.bar(dom_df, x='Domain', y='TotalTxns', color_discrete_sequence=['#8a8a82'])
             fig2.update_traces(marker_line_width=0)
             fig2.update_layout(title_text="Total Transaction Count")
-            st.plotly_chart(chart(fig2), use_container_width=True)
+            st.plotly_chart(chart(fig2), width='stretch')
 
         st.divider()
         section("Market Share Over Time")
@@ -410,7 +474,7 @@ def main():
         fig3 = px.bar(dom_time, x='Period', y='Value', color='Domain', 
                       barmode='stack', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"])
         fig3.update_traces(marker_line_width=0)
-        st.plotly_chart(chart(fig3), use_container_width=True)
+        st.plotly_chart(chart(fig3), width='stretch')
 
 
     elif page == "Forecast":
@@ -451,13 +515,13 @@ def main():
                          barmode='group', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"],
                          labels={'Forecast':'Forecast Volume (₹)'})
             fig.update_traces(marker_line_width=0)
-            st.plotly_chart(chart(fig), use_container_width=True)
+            st.plotly_chart(chart(fig), width='stretch')
 
             st.divider()
             section("Total forecast summary")
             summary = fdf.groupby('Domain')['Forecast'].sum().sort_values(ascending=False).reset_index()
             summary['Forecast'] = summary['Forecast'].apply(lambda x: f"₹{x:,.0f}")
-            st.dataframe(summary, use_container_width=True, hide_index=True)
+            st.dataframe(summary, width='stretch', hide_index=True)
             st.info("Linear Regression trend projection based on historical domain performance.")
         else:
             st.warning("Not enough historical data to generate forecasts.")
