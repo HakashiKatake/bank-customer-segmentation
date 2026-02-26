@@ -133,16 +133,26 @@ The app is deployed on **Streamlit Cloud**:
 ## Screenshots
 
 ### Dashboard Overview
-![Dashboard](screenshots/dashboard.png)
+<img width="1470" height="652" alt="Screenshot 2026-02-26 at 11 06 14 PM" src="https://github.com/user-attachments/assets/86dfda99-8e73-4e12-be40-f40c24d119c9" />
 
-### Customer Clusters (PCA)
-![Clusters](screenshots/clusters.png)
 
-### Regional Forecast
-![Forecast](screenshots/forecast.png)
+### Monthly Revenue Trend
+<img width="970" height="426" alt="Screenshot 2026-02-26 at 11 07 45 PM" src="https://github.com/user-attachments/assets/54b40502-0ac3-42a1-b24d-9e7a6764c29a" />
 
-### Single Customer Predictor
-![Predictor](screenshots/predictor.png)
+
+
+### Top 10 Locations by Processing Volume
+<img width="1067" height="505" alt="Screenshot 2026-02-26 at 11 08 05 PM" src="https://github.com/user-attachments/assets/bd6a5ee8-0a32-48a8-833a-f66e3b9ded49" />
+
+### Domain Distribution
+<img width="1040" height="480" alt="Screenshot 2026-02-26 at 11 08 56 PM" src="https://github.com/user-attachments/assets/8b39ffee-7c28-472a-81ed-62ad3bef7958" />
+
+### Clusters using PCA
+<img width="1052" height="473" alt="Screenshot 2026-02-26 at 11 10 10 PM" src="https://github.com/user-attachments/assets/467ab7eb-6c95-46d5-9b46-8fdeda81a9af" />
+
+### Actual vs Predicted
+<img width="813" height="461" alt="Screenshot 2026-02-26 at 11 10 48 PM" src="https://github.com/user-attachments/assets/d2002cf4-0970-4ed0-a9b7-7da25093f86b" />
+
 
 ---
 
