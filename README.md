@@ -113,7 +113,7 @@ streamlit run app.py
 ```
 
 ### 3. Open Colab Notebook
-Upload `bank_customer_segmentation.ipynb` to [Google Colab](https://colab.research.google.com/)
+Upload `bank_customer_segmentation.ipynb` to [Google Colab](https://colab.research.google.com/drive/1Kh7Jior64Y8o1eT6lE-At2MSWFzzlni7?usp=sharing)
 
 ---
 
