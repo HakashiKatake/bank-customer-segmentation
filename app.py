@@ -12,18 +12,13 @@ warnings.filterwarnings('ignore')
 
 # ─── PAGE CONFIG ───────────────────────────────────────────────
 st.set_page_config(
-    page_title="BANKSEG / Customer Intelligence",
+    page_title="BANKSEG / Location Intelligence",
     page_icon="⬛",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ─── DESIGN SYSTEM ─────────────────────────────────────────────
-# Aesthetic: Industrial Utilitarian — monochrome, sharp, editorial
-# Fonts: IBM Plex Mono (display) + IBM Plex Sans (body)
-# No gradients. No border-radius. No hover animations.
-# Strict neutral palette: white, off-white, mid-gray, charcoal, near-black.
-
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
@@ -147,10 +142,9 @@ hr { border: none; border-top: 1px solid #d0cfc8; margin: 1.5rem 0; }
 }
 .stSuccess *, .stInfo *, .stWarning * { color: #1a1a1a !important; }
 
-/* ── PLOTLY CHARTS: strip built-in padding ── */
+/* ── PLOTLY CHARTS ── */
 .js-plotly-plot { border: 1px solid #d0cfc8; }
 
-/* ── HEADINGS ── */
 h1, h2, h3, h4 { 
   font-family: 'IBM Plex Mono', monospace !important;
   color: #1a1a1a !important;
@@ -158,10 +152,7 @@ h1, h2, h3, h4 {
   letter-spacing: -0.01em;
 }
 
-/* ── SIDEBAR NAV RADIO ── */
-section[data-testid="stSidebar"] .stRadio > div {
-  gap: 4px;
-}
+section[data-testid="stSidebar"] .stRadio > div { gap: 4px; }
 section[data-testid="stSidebar"] .stRadio label {
   padding: 6px 10px;
   font-family: 'IBM Plex Mono', monospace !important;
@@ -176,7 +167,6 @@ section[data-testid="stSidebar"] .stRadio label[data-selected="true"] {
 </style>
 """, unsafe_allow_html=True)
 
-# ─── PLOTLY NEUTRAL TEMPLATE ───────────────────────────────────
 NEUTRAL = dict(
     font_family="IBM Plex Mono",
     font_color="#1a1a1a",
@@ -190,85 +180,66 @@ NEUTRAL = dict(
     xaxis=dict(gridcolor="#e8e7e0", linecolor="#d0cfc8", tickfont_family="IBM Plex Mono", tickfont_size=10),
     yaxis=dict(gridcolor="#e8e7e0", linecolor="#d0cfc8", tickfont_family="IBM Plex Mono", tickfont_size=10),
 )
-
-# Neutral sequential palette (no hue shift, just value steps)
 NEUTRAL_SEQ = ["#1a1a1a", "#3a3a3a", "#5a5a5a", "#7a7a7a", "#9a9a9a"]
 CATEGORICAL  = ["#1a1a1a", "#5a5a52", "#8a8a82", "#b4b4ac", "#d0cfc8"]
 
 
-# ─── DATA ──────────────────────────────────────────────────────
 @st.cache_data
-def generate_data(n=50_000, seed=42):
-    np.random.seed(seed)
-    regions       = ['North', 'South', 'East', 'West', 'Central']
-    account_types = ['Savings', 'Checking', 'Business', 'Premium', 'Youth']
-    region_growth = {'North':1.0, 'South':1.15, 'East':1.05, 'West':1.2, 'Central':0.95}
-    df = pd.DataFrame({
-        'CustomerID':        np.arange(1, n+1),
-        'Age':               np.random.randint(18, 75, n),
-        'Gender':            np.random.choice(['Male','Female','Other'], n, p=[0.48,0.48,0.04]),
-        'Region':            np.random.choice(regions, n, p=[0.2,0.25,0.2,0.2,0.15]),
-        'AccountType':       np.random.choice(account_types, n),
-        'Balance':           np.abs(np.random.normal(25000, 12000, n)).round(2),
-        'NumTransactions':   np.random.poisson(12, n),
-        'TransactionVolume': np.abs(np.random.exponential(3000, n)).round(2),
-        'CreditScore':       np.clip(np.random.normal(700, 80, n), 300, 850).astype(int),
-        'LoanAmount':        np.abs(np.random.exponential(45000, n)).round(2),
-        'MonthlyIncome':     np.abs(np.random.normal(5000, 2000, n)).round(2),
-        'Tenure':            np.random.randint(0, 20, n),
-        'NumProducts':       np.random.randint(1, 6, n),
-        'IsActive':          np.random.choice([0,1], n, p=[0.2,0.8]),
-        'HasCreditCard':     np.random.choice([0,1], n, p=[0.35,0.65]),
-        'SatisfactionScore': np.random.randint(1, 11, n),
-        'Year':              np.random.choice([2020,2021,2022,2023,2024], n),
-        'Quarter':           np.random.choice([1,2,3,4], n)
-    })
-    df['TransactionVolume'] = df.apply(
-        lambda r: r['TransactionVolume'] * region_growth[r['Region']], axis=1)
-    df['BalanceToIncome']   = (df['Balance'] / (df['MonthlyIncome'] * 12 + 1)).round(4)
-    df['LoanToBalance']     = (df['LoanAmount'] / (df['Balance'] + 1)).round(4)
-    df['AvgTransactionAmt'] = (df['TransactionVolume'] / (df['NumTransactions'] + 1)).round(2)
+def load_data():
+    df = pd.read_csv('bankdataset.csv')
+    df['Date'] = pd.to_datetime(df['Date'], format='mixed')
+    df['Year'] = df['Date'].dt.year
+    df['Quarter'] = df['Date'].dt.quarter
+    df['Month'] = df['Date'].dt.month
+    df['AvgTxnValue'] = (df['Value'] / df['Transaction_count']).round(2)
     return df
 
 
 @st.cache_resource
 def train_models(df):
-    feats = ['Age','Balance','NumTransactions','TransactionVolume',
-             'CreditScore','LoanAmount','MonthlyIncome','Tenure',
-             'NumProducts','SatisfactionScore','BalanceToIncome','LoanToBalance']
-    scaler = StandardScaler()
-    X_sc = scaler.fit_transform(df[feats])
-    kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
-    df = df.copy()
-    df['Cluster'] = kmeans.fit_predict(X_sc)
-    names = {0:'PREMIUM SAVERS', 1:'GROWTH INVESTORS', 2:'ACTIVE SPENDERS', 3:'ENTRY-LEVEL'}
-    df['Segment'] = df['Cluster'].map(names)
-
-    reg = df.groupby(['Region','Year','Quarter']).agg(
-        TotalVolume=('TransactionVolume','sum'),
-        AvgBalance=('Balance','mean'),
-        AvgCreditScore=('CreditScore','mean'),
-        CustomerCount=('CustomerID','count'),
-        AvgIncome=('MonthlyIncome','mean'),
-        AvgTenure=('Tenure','mean')
+    # 1. Location-based Segmentation
+    loc_stats = df.groupby('Location').agg(
+        TotalValue=('Value', 'sum'),
+        TotalTxns=('Transaction_count', 'sum'),
+        AvgTxnValue=('AvgTxnValue', 'mean'),
+        DistinctDomains=('Domain', 'nunique'),
+        DaysActive=('Date', 'nunique')
     ).reset_index()
-    reg['TimeIndex'] = (reg['Year'] - reg['Year'].min())*4 + reg['Quarter']
-    le = LabelEncoder()
-    reg['RegionEnc'] = le.fit_transform(reg['Region'])
-    rf = ['TimeIndex','RegionEnc','AvgBalance','AvgCreditScore','CustomerCount','AvgIncome','AvgTenure']
+    
+    feats = ['TotalValue', 'TotalTxns', 'AvgTxnValue', 'DistinctDomains', 'DaysActive']
+    scaler = StandardScaler()
+    X_sc = scaler.fit_transform(loc_stats[feats])
+    
+    kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
+    loc_stats['Cluster'] = kmeans.fit_predict(X_sc)
+    
+    names = {0:'PREMIUM MARKETS', 1:'VOLUME HUBS', 2:'BALANCED ZONES', 3:'EMERGING AREAS'}
+    loc_stats['Segment'] = loc_stats['Cluster'].map(names)
+    
+    # 2. Linear Regression (Forecasting by Domain & Location over Time)
+    reg_df = df.groupby(['Location', 'Domain', 'Year', 'Quarter']).agg(
+        TotalValue=('Value', 'sum'),
+        TotalTxns=('Transaction_count', 'sum')
+    ).reset_index()
+    
+    reg_df['TimeIndex'] = (reg_df['Year'] - reg_df['Year'].min())*4 + reg_df['Quarter']
+    
+    le_loc = LabelEncoder()
+    le_dom = LabelEncoder()
+    
+    reg_df['LocEnc'] = le_loc.fit_transform(reg_df['Location'])
+    reg_df['DomEnc'] = le_dom.fit_transform(reg_df['Domain'])
+    
+    rf = ['TimeIndex', 'LocEnc', 'DomEnc', 'TotalTxns']
     lr_sc = StandardScaler()
-    Xr = lr_sc.fit_transform(reg[rf])
-    lr = LinearRegression().fit(Xr, reg['TotalVolume'])
-    return df, kmeans, scaler, lr, lr_sc, le, names, feats
+    Xr = lr_sc.fit_transform(reg_df[rf])
+    lr = LinearRegression().fit(Xr, reg_df['TotalValue'])
+    
+    return df, loc_stats, kmeans, scaler, lr, lr_sc, le_loc, le_dom, names, feats
 
 
 def chart(fig):
-    """Apply neutral template to every figure."""
-    fig.update_layout(
-        **NEUTRAL,
-        margin=dict(l=20, r=20, t=40, b=20),
-        height=340,
-    )
+    fig.update_layout(**NEUTRAL, margin=dict(l=20, r=20, t=40, b=20), height=340)
     fig.update_xaxes(showgrid=True, gridwidth=1)
     fig.update_yaxes(showgrid=True, gridwidth=1)
     return fig
@@ -293,12 +264,15 @@ def kv(label, value):
     </div>""", unsafe_allow_html=True)
 
 
-# ─── MAIN ──────────────────────────────────────────────────────
 def main():
-    df_raw = generate_data()
-    df, kmeans, scaler, lr, lr_sc, le, names, feats = train_models(df_raw)
+    try:
+        df_raw = load_data()
+    except FileNotFoundError:
+        st.error("bankdataset.csv not found. Please ensure the dataset exists in the directory.")
+        return
 
-    # ── SIDEBAR ─────────────────────────────────────────────
+    df, loc_stats, kmeans, scaler, lr, lr_sc, le_loc, le_dom, names, feats = train_models(df_raw)
+
     with st.sidebar:
         st.markdown("""
         <div style="font-family:'IBM Plex Mono',monospace; font-size:0.95rem;
@@ -309,15 +283,15 @@ def main():
         <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
                     color:#5a5a52; letter-spacing:0.1em; text-transform:uppercase;
                     padding-bottom:20px;">
-          Customer Intelligence
+          Location Intelligence
         </div>
         """, unsafe_allow_html=True)
         st.divider()
 
         page = st.radio("Navigate", [
             "Overview",
-            "Segments",
-            "Regions",
+            "Market Segments",
+            "Domains",
             "Forecast",
             "Predictor"
         ], label_visibility="collapsed")
@@ -329,300 +303,211 @@ def main():
                     padding-bottom:8px;">
           Dataset
         </div>""", unsafe_allow_html=True)
-        st.info(f"50,000 customers\n5 regions / 4 segments")
-        st.markdown("""
-        <a href="https://www.kaggle.com/datasets/ksabishek/massive-bank-dataset-1-million-rows"
-           style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#8a8a82;">
-          Kaggle: Massive Bank Dataset →
-        </a>""", unsafe_allow_html=True)
+        st.info(f"{len(df):,} records\n{df['Location'].nunique()} locations\n{df['Domain'].nunique()} domains")
 
-    # ── HEADER ──────────────────────────────────────────────
+
     st.markdown("""
     <div style="border-bottom:2px solid #1a1a1a; padding-bottom:20px; margin-bottom:28px;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:1.9rem;
                   font-weight:500; color:#1a1a1a; letter-spacing:-0.01em;">
-        BANK CUSTOMER INTELLIGENCE
+        BANK LOCATION & DOMAIN INTELLIGENCE
       </div>
       <div style="font-family:'IBM Plex Sans',sans-serif; font-size:0.85rem;
                   color:#5a5a52; margin-top:6px;">
-        Segmentation via K-Means · Regional forecasting via Linear Regression
+        Market Segmentation via K-Means · Domain forecasting via Linear Regression
       </div>
     </div>
     """, unsafe_allow_html=True)
 
-    regions = ['North', 'South', 'East', 'West', 'Central']
 
-    # ════════════════════════════════════════════════════════
-    #  PAGE — OVERVIEW
-    # ════════════════════════════════════════════════════════
     if page == "Overview":
         section("Key metrics")
         c1, c2, c3, c4 = st.columns(4)
-        with c1: st.metric("Total Customers",   f"{len(df):,}",           "+5.2%")
-        with c2: st.metric("Avg Balance",        f"${df['Balance'].mean():,.0f}", "+3.1%")
-        with c3: st.metric("Avg Credit Score",   f"{df['CreditScore'].mean():.0f}", "+12 pts")
-        with c4: st.metric("Transaction Volume", f"${df['TransactionVolume'].sum()/1e6:.1f}M", "+8.4%")
+        total_val = df['Value'].sum()
+        total_txns = df['Transaction_count'].sum()
+        with c1: st.metric("Total Processing Vol", f"₹{total_val/1e9:.2f}B", "")
+        with c2: st.metric("Total Transactions",  f"{total_txns/1e6:.1f}M", "")
+        with c3: st.metric("Unique Locations",    f"{df['Location'].nunique()}", "")
+        with c4: st.metric("Avg Value per Txn",   f"₹{df['AvgTxnValue'].mean():.2f}", "")
 
         st.divider()
-        section("Transaction volume by region · 2020-2024")
-
-        tr = df.groupby(['Year','Region'])['TransactionVolume'].sum().reset_index()
-        fig = px.line(tr, x='Year', y='TransactionVolume', color='Region',
-                      markers=True, color_discrete_sequence=NEUTRAL_SEQ)
-        fig.update_traces(line_width=1.5, marker_size=4)
+        section("Transaction volume over time")
+        tr = df.groupby(['Year', 'Month', 'Date'])['Value'].sum().reset_index()
+        fig = px.line(tr, x='Date', y='Value', color_discrete_sequence=['#1a1a1a'])
+        fig.update_traces(line_width=1.5)
         st.plotly_chart(chart(fig), use_container_width=True)
 
         st.divider()
-        section("Segment overview")
-        profile = df.groupby('Segment').agg(
-            Count=('CustomerID','count'),
-            AvgBalance=('Balance','mean'),
-            AvgCredit=('CreditScore','mean'),
-            AvgIncome=('MonthlyIncome','mean'),
-            AvgProducts=('NumProducts','mean'),
-            AvgSatisf=('SatisfactionScore','mean'),
-        ).round(1).reset_index()
-        profile.rename(columns={
-            'Segment':'Segment','Count':'Customers',
-            'AvgBalance':'Avg Balance','AvgCredit':'Avg Credit',
-            'AvgIncome':'Avg Income','AvgProducts':'Products','AvgSatisf':'Satisfaction'
-        }, inplace=True)
-        profile['Avg Balance'] = profile['Avg Balance'].apply(lambda x: f"${x:,.0f}")
-        profile['Avg Income']  = profile['Avg Income'].apply(lambda x: f"${x:,.0f}")
-        st.dataframe(profile, use_container_width=True, hide_index=True)
+        section("Top 10 Locations by Volume")
+        top_locs = loc_stats.sort_values('TotalValue', ascending=False).head(10)
+        fig2 = px.bar(top_locs, x='Location', y='TotalValue', color_discrete_sequence=['#1a1a1a'])
+        fig2.update_traces(marker_line_width=0)
+        st.plotly_chart(chart(fig2), use_container_width=True)
 
-    # ════════════════════════════════════════════════════════
-    #  PAGE — SEGMENTS
-    # ════════════════════════════════════════════════════════
-    elif page == "Segments":
-        section("K-Means clusters · PCA projection (n=8,000)")
 
-        X_sc = scaler.transform(df[feats])
+    elif page == "Market Segments":
+        section("K-Means Market Clusters · PCA projection")
+        
+        X_sc = scaler.transform(loc_stats[feats])
         pca  = PCA(n_components=2, random_state=42)
-        coords = pca.fit_transform(X_sc[:8000])
+        coords = pca.fit_transform(X_sc)
         pca_df = pd.DataFrame(coords, columns=['PC1','PC2'])
-        pca_df['Segment'] = df['Segment'].values[:8000]
+        pca_df['Segment'] = loc_stats['Segment']
+        pca_df['Location'] = loc_stats['Location']
 
-        fig = px.scatter(pca_df, x='PC1', y='PC2', color='Segment',
-                         opacity=0.55, color_discrete_sequence=NEUTRAL_SEQ)
-        fig.update_traces(marker_size=3)
+        fig = px.scatter(pca_df, x='PC1', y='PC2', color='Segment', text='Location',
+                         opacity=0.7, color_discrete_sequence=NEUTRAL_SEQ)
+        fig.update_traces(marker_size=8, textposition='top center', textfont_size=8, textfont_family="IBM Plex Mono")
         st.plotly_chart(chart(fig), use_container_width=True)
 
         st.divider()
         col1, col2 = st.columns([1, 2])
-
         with col1:
-            section("Select segment")
+            section("Select market segment")
             seg = st.selectbox("Segment", list(names.values()), label_visibility="collapsed")
 
-        seg_df = df[df['Segment'] == seg]
+        seg_df = loc_stats[loc_stats['Segment'] == seg]
 
         with col2:
             section(f"Profile · {seg.lower()}")
-            m = seg_df[['Age','Balance','CreditScore','MonthlyIncome',
-                         'NumProducts','Tenure','SatisfactionScore']].mean().round(1)
+            m = seg_df[['TotalValue','TotalTxns','AvgTxnValue','DistinctDomains']].mean().round(1)
             m_df = pd.DataFrame({'Metric': m.index, 'Mean': m.values})
-            fig2 = px.bar(m_df, x='Metric', y='Mean',
-                          color_discrete_sequence=['#1a1a1a'])
+            fig2 = px.bar(m_df, x='Metric', y='Mean', color_discrete_sequence=['#1a1a1a'])
             fig2.update_traces(marker_line_width=0)
             st.plotly_chart(chart(fig2), use_container_width=True)
 
         st.divider()
-        section("Age distribution · segment vs all customers")
-        fig3 = go.Figure()
-        fig3.add_trace(go.Histogram(
-            x=df['Age'], name='All', nbinsx=30,
-            opacity=0.4, marker_color='#9a9a9a', marker_line_width=0))
-        fig3.add_trace(go.Histogram(
-            x=seg_df['Age'], name=seg, nbinsx=30,
-            opacity=1.0, marker_color='#1a1a1a', marker_line_width=0))
-        fig3.update_layout(barmode='overlay')
-        st.plotly_chart(chart(fig3), use_container_width=True)
+        section("Locations in this segment")
+        disp_df = seg_df[['Location', 'TotalValue', 'TotalTxns', 'AvgTxnValue']].sort_values('TotalValue', ascending=False)
+        disp_df['TotalValue'] = disp_df['TotalValue'].apply(lambda x: f"₹{x:,.0f}")
+        disp_df['TotalTxns']  = disp_df['TotalTxns'].apply(lambda x: f"{x:,.0f}")
+        st.dataframe(disp_df, use_container_width=True, hide_index=True)
 
-        # Insight
-        tips = {
-            'PREMIUM SAVERS':   "High balance, high credit score, long tenure. Retention focus: private banking & exclusive products.",
-            'GROWTH INVESTORS':  "Mid-career professionals growing wealth. Target: investment accounts, mortgages.",
-            'ACTIVE SPENDERS':  "High transaction frequency. Target: cashback credit lines and spend rewards.",
-            'ENTRY-LEVEL':      "New, lower-balance customers. Target: digital onboarding and savings education.",
-        }
-        if seg in tips:
-            st.info(tips[seg])
 
-    # ════════════════════════════════════════════════════════
-    #  PAGE — REGIONS
-    # ════════════════════════════════════════════════════════
-    elif page == "Regions":
-        section("Regional metrics")
-        rs = df.groupby('Region').agg(
-            Customers=('CustomerID','count'),
-            AvgBalance=('Balance','mean'),
-            TotalVolume=('TransactionVolume','sum'),
-            AvgCredit=('CreditScore','mean'),
-        ).reset_index().round(0)
+    elif page == "Domains":
+        section("Volume by business domain")
+        dom_df = df.groupby('Domain').agg(
+            TotalValue=('Value','sum'),
+            TotalTxns=('Transaction_count','sum')
+        ).reset_index().sort_values('TotalValue', ascending=False)
 
         c1, c2 = st.columns(2)
         with c1:
-            fig = px.bar(rs, x='Region', y='TotalVolume',
-                         color_discrete_sequence=['#1a1a1a'])
+            fig = px.bar(dom_df, x='Domain', y='TotalValue', color_discrete_sequence=['#1a1a1a'])
             fig.update_traces(marker_line_width=0)
-            fig.update_layout(title_text="Total Transaction Volume by Region")
+            fig.update_layout(title_text="Total Transaction Volume")
             st.plotly_chart(chart(fig), use_container_width=True)
         with c2:
-            fig2 = px.scatter(rs, x='AvgBalance', y='AvgCredit', size='Customers',
-                              text='Region', color_discrete_sequence=['#1a1a1a'])
-            fig2.update_traces(textfont_family="IBM Plex Mono", textfont_size=9,
-                                textposition="top center", marker_line_width=0)
-            fig2.update_layout(title_text="Avg Balance vs Credit Score (size=Customers)")
+            fig2 = px.bar(dom_df, x='Domain', y='TotalTxns', color_discrete_sequence=['#5a5a52'])
+            fig2.update_traces(marker_line_width=0)
+            fig2.update_layout(title_text="Total Transaction Count")
             st.plotly_chart(chart(fig2), use_container_width=True)
 
         st.divider()
-        section("Segment share by region")
-        cross = pd.crosstab(df['Region'], df['Segment'], normalize='index').round(3)*100
-        fig3  = px.bar(cross.reset_index().melt(id_vars='Region'),
-                       x='Region', y='value', color='Segment', barmode='stack',
-                       color_discrete_sequence=NEUTRAL_SEQ,
-                       labels={'value':'Share (%)'})
+        section("Market Share Over Time")
+        dom_time = df.groupby(['Year', 'Quarter', 'Domain'])['Value'].sum().reset_index()
+        dom_time['Period'] = dom_time['Year'].astype(str) + " Q" + dom_time['Quarter'].astype(str)
+        fig3 = px.bar(dom_time, x='Period', y='Value', color='Domain', 
+                      barmode='stack', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"])
         fig3.update_traces(marker_line_width=0)
         st.plotly_chart(chart(fig3), use_container_width=True)
 
-    # ════════════════════════════════════════════════════════
-    #  PAGE — FORECAST
-    # ════════════════════════════════════════════════════════
+
     elif page == "Forecast":
-        section("Regional transaction volume forecast · 2025-2026")
-
-        reg_df = df.groupby(['Region','Year','Quarter']).agg(
-            TotalVolume=('TransactionVolume','sum'),
-            AvgBalance=('Balance','mean'),
-            AvgCreditScore=('CreditScore','mean'),
-            CustomerCount=('CustomerID','count'),
-            AvgIncome=('MonthlyIncome','mean'),
-            AvgTenure=('Tenure','mean')
+        section("Volume forecast by Domain · 2024-2025")
+        
+        reg_df = df.groupby(['Domain', 'Year', 'Quarter']).agg(
+            TotalValue=('Value', 'sum'),
+            TotalTxns=('Transaction_count', 'mean') # avg per location locally? no, just across board
         ).reset_index()
-        reg_df['TimeIndex'] = (reg_df['Year'] - reg_df['Year'].min())*4 + reg_df['Quarter']
-        reg_df['RegionEnc'] = le.transform(reg_df['Region'])
 
-        rows, max_t = [], reg_df['TimeIndex'].max()
-        future = [(2025,q) for q in range(1,5)] + [(2026,q) for q in range(1,5)]
-        for region in regions:
-            rd    = reg_df[reg_df['Region'] == region]
-            r_enc = le.transform([region])[0]
-            for i,(yr,qt) in enumerate(future):
-                row_sc = lr_sc.transform([[max_t+i+1, r_enc,
-                                           rd['AvgBalance'].mean(),
-                                           rd['AvgCreditScore'].mean(),
-                                           rd['CustomerCount'].mean()*1.05,
-                                           rd['AvgIncome'].mean()*1.03,
-                                           rd['AvgTenure'].mean()+1]])
-                rows.append({'Region':region,'Year':yr,'Quarter':qt,
-                              'Forecast':max(0, lr.predict(row_sc)[0]),
-                              'Period':f"{yr} Q{qt}"})
-        fdf = pd.DataFrame(rows)
-
-        fig = px.bar(fdf, x='Period', y='Forecast', color='Region',
-                     barmode='group', color_discrete_sequence=NEUTRAL_SEQ,
-                     labels={'Forecast':'Volume ($)'})
-        fig.update_traces(marker_line_width=0)
-        fig.update_layout(xaxis_tickangle=-45, height=380)
-        st.plotly_chart(chart(fig), use_container_width=True)
-
-        st.divider()
-        c1, c2 = st.columns(2)
-        with c1:
-            section("Total forecast 2025-2026 by region")
-            summary = (fdf.groupby('Region')['Forecast'].sum()
-                          .sort_values(ascending=False)
-                          .reset_index()
-                          .rename(columns={'Forecast':'Total ($)'}))
-            summary['Total ($)'] = summary['Total ($)'].apply(lambda x: f"${x:,.0f}")
-            st.dataframe(summary, use_container_width=True, hide_index=True)
-        with c2:
-            section("Growth vs historical (%)")
-            hist = reg_df.groupby('Region')['TotalVolume'].sum()
-            fore = fdf.groupby('Region')['Forecast'].sum()
-            growth = ((fore / hist * 100) - 100).round(1).reset_index()
-            growth.columns = ['Region','Growth (%)']
-            fig2 = px.bar(growth, x='Region', y='Growth (%)',
-                          color='Growth (%)', color_continuous_scale=['#9a9a9a','#1a1a1a'])
-            fig2.update_traces(marker_line_width=0)
-            st.plotly_chart(chart(fig2), use_container_width=True)
-
-        st.info("Model: Linear Regression · Features: Time index, region encoding, avg balance, credit score, customer count, income, tenure")
-
-    # ════════════════════════════════════════════════════════
-    #  PAGE — PREDICTOR
-    # ════════════════════════════════════════════════════════
-    elif page == "Predictor":
-        section("Single customer segment & revenue predictor")
-        st.markdown(
-            "<p style='font-family:IBM Plex Sans,sans-serif;font-size:0.85rem;"
-            "color:#5a5a52;margin-bottom:20px;'>"
-            "Enter customer attributes to classify them into a segment and forecast their regional revenue contribution.</p>",
-            unsafe_allow_html=True)
-
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            age        = st.slider("Age",                  18, 75,     35)
-            balance    = st.number_input("Account Balance ($)", 100, 500000, 25000, 1000)
-            num_txn    = st.number_input("Monthly Transactions", 0, 100,  12)
-            txn_vol    = st.number_input("Monthly Txn Volume ($)", 100, 100000, 3000, 500)
-        with c2:
-            credit     = st.slider("Credit Score",          300, 850,   700)
-            loan       = st.number_input("Loan Amount ($)",     0, 500000, 50000, 5000)
-            income     = st.number_input("Monthly Income ($)",  500, 50000, 5000, 500)
-            tenure     = st.slider("Tenure (years)",        0, 20,     5)
-        with c3:
-            n_prod     = st.slider("No. of Products",       1, 6,      2)
-            satisf     = st.slider("Satisfaction (1-10)",   1, 10,     7)
-            region     = st.selectbox("Region", regions)
-            yr_pred    = st.selectbox("Forecast Year", [2025, 2026])
-
-        st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
-        run = st.button("RUN PREDICTION")
-
-        if run:
-            b2i = balance / (income*12+1)
-            l2b = loan / (balance+1)
-            inp_sc = scaler.transform([[age, balance, num_txn, txn_vol, credit, loan,
-                                         income, tenure, n_prod, satisf, b2i, l2b]])
-            cluster_id = kmeans.predict(inp_sc)[0]
-            segment    = names[cluster_id]
-
-            r_enc = le.transform([region])[0]
-            q_preds = []
-            for i, qt in enumerate(range(1,5)):
-                row_sc = lr_sc.transform([[20+i+1, r_enc, balance, credit, 200, income, tenure]])
-                q_preds.append(max(0, lr.predict(row_sc)[0]))
-            total = sum(q_preds)
-
-            st.divider()
-            section("Prediction results")
-            r1, r2, r3 = st.columns(3)
-            with r1: kv("Predicted Segment", segment)
-            with r2: kv("Cluster ID",         str(cluster_id))
-            with r3: kv(f"Forecast {yr_pred}", f"${total:,.0f}")
-
-            st.divider()
-            section(f"Quarterly breakdown · {region} · {yr_pred}")
-            q_df = pd.DataFrame({
-                'Quarter': [f"Q{q}" for q in range(1,5)],
-                'Forecast ($)': q_preds
-            })
-            fig = px.bar(q_df, x='Quarter', y='Forecast ($)',
-                         color_discrete_sequence=['#1a1a1a'])
+        min_yr = df['Year'].min()
+        last_yr = df['Year'].max()
+        last_q = df[df['Year'] == last_yr]['Quarter'].max()
+        
+        # Simple domain-level trending for visualization
+        time_idx = (reg_df['Year'] - min_yr)*4 + reg_df['Quarter']
+        
+        rows = []
+        domains = df['Domain'].unique()
+        
+        # We will generate rolling forecasts simply using a Domain-specific linear trend for demonstration
+        for dom in domains:
+            d_data = reg_df[reg_df['Domain'] == dom]
+            x = ((d_data['Year'] - min_yr)*4 + d_data['Quarter']).values.reshape(-1,1)
+            y = d_data['TotalValue'].values
+            if len(x) > 1:
+                mdl = LinearRegression().fit(x, y)
+                for i in range(1, 5): # Predict next 4 quarters
+                    future_idx = (last_yr - min_yr)*4 + last_q + i
+                    yr = last_yr if (last_q + i) <= 4 else (last_yr + 1)
+                    qt = (last_q + i) if (last_q + i) <= 4 else (last_q + i - 4)
+                    pred = mdl.predict([[future_idx]])[0]
+                    rows.append({'Domain': dom, 'Year': yr, 'Quarter': qt, 'Forecast': max(0, pred), 'Period': f"{yr} Q{qt}"})
+            
+        if rows:
+            fdf = pd.DataFrame(rows)
+            fig = px.bar(fdf, x='Period', y='Forecast', color='Domain',
+                         barmode='group', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"],
+                         labels={'Forecast':'Forecast Volume (₹)'})
             fig.update_traces(marker_line_width=0)
             st.plotly_chart(chart(fig), use_container_width=True)
 
-            tips = {
-                'PREMIUM SAVERS':   "Recommended: Private banking, wealth management, exclusive credit cards.",
-                'GROWTH INVESTORS':  "Recommended: Investment accounts, mortgage products, insurance bundles.",
-                'ACTIVE SPENDERS':  "Recommended: High cashback cards, personal loan top-ups, spend rewards.",
-                'ENTRY-LEVEL':      "Recommended: Digital savings accounts, micro-loans, financial literacy tools.",
-            }
-            if segment in tips:
-                st.info(tips[segment])
+            st.divider()
+            section("Total forecast summary")
+            summary = fdf.groupby('Domain')['Forecast'].sum().sort_values(ascending=False).reset_index()
+            summary['Forecast'] = summary['Forecast'].apply(lambda x: f"₹{x:,.0f}")
+            st.dataframe(summary, use_container_width=True, hide_index=True)
+            st.info("Linear Regression trend projection based on historical domain performance.")
+        else:
+            st.warning("Not enough historical data to generate forecasts.")
 
+
+    elif page == "Predictor":
+        section("Location & Domain Forecaster")
+        st.markdown(
+            "<p style='font-family:IBM Plex Sans,sans-serif;font-size:0.85rem;"
+            "color:#5a5a52;margin-bottom:20px;'>"
+            "Estimate future transaction volume for a specific location and business domain.</p>",
+            unsafe_allow_html=True)
+
+        locations = sorted(df['Location'].unique())
+        domains = sorted(df['Domain'].unique())
+
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            loc = st.selectbox("Market Location", locations)
+        with c2:
+            dom = st.selectbox("Business Domain", domains)
+        with c3:
+            est_txns = st.number_input("Estimated Txn Volume (Scale)", 100, 10000, 1500)
+
+        st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
+        run = st.button("CALCULATE PROJECTION")
+
+        if run:
+            # Segment info for location
+            loc_seg = loc_stats[loc_stats['Location'] == loc]['Segment'].values[0]
+            
+            # Predict for next year using the trained model
+            l_enc = le_loc.transform([loc])[0]
+            d_enc = le_dom.transform([dom])[0]
+            
+            current_max_time = (df['Year'].max() - df['Year'].min())*4 + 4 
+            
+            row_sc = lr_sc.transform([[current_max_time + 4, l_enc, d_enc, est_txns]]) # Predict 4 quarters out
+            forecast_val = max(0, lr.predict(row_sc)[0])
+
+            st.divider()
+            section("Projection results")
+            r1, r2, r3 = st.columns(3)
+            with r1: kv("Market Segment", loc_seg)
+            with r2: kv("Location", loc)
+            with r3: kv("Forecasted Base", f"₹{forecast_val:,.0f}")
+            
+            # Add a bit of visual flair
+            st.divider()
+            st.info(f"The structural market segment for **{loc}** is classified as **{loc_seg}**. The forecasted baseline volume per quarter for **{dom}** operations is roughly **₹{forecast_val:,.0f}**, assuming transaction counts hold at {est_txns}.")
 
 if __name__ == "__main__":
     main()
