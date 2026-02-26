@@ -20,6 +20,8 @@ This project solves two critical business problems:
 1. **Who are our customers?** — Identify distinct behavioral clusters using K-Means
 2. **Where is revenue growing?** — Forecast regional transaction volume using Linear Regression
 
+Google Collab link: https://colab.research.google.com/drive/1Kh7Jior64Y8o1eT6lE-At2MSWFzzlni7?usp=sharing
+
 ---
 
 ## Economic Concepts Applied
