@@ -1,4 +1,4 @@
-# 🏦 Bank Customer Segmentation & Regional Revenue Forecasting
+# Bank Customer Segmentation & Regional Revenue Forecasting
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-red?logo=streamlit)](https://streamlit.io)
@@ -9,7 +9,7 @@
 
 ---
 
-## 📌 Business Problem Statement
+## Business Problem Statement
 
 Modern banks serve millions of customers with highly varied financial behaviors. A one-size-fits-all approach leads to:
 - Revenue leakage from mismatched products
@@ -22,7 +22,7 @@ This project solves two critical business problems:
 
 ---
 
-## 💡 Economic Concepts Applied
+## Economic Concepts Applied
 
 | Concept | Application |
 |---------|------------|
@@ -35,7 +35,7 @@ This project solves two critical business problems:
 
 ---
 
-## 🤖 AI Techniques Used
+## AI Techniques Used
 
 | Technique | Purpose |
 |-----------|---------|
@@ -48,18 +48,18 @@ This project solves two critical business problems:
 
 ---
 
-## 🎯 Customer Segments Discovered
+## Customer Segments Discovered
 
 | Segment | Profile | Strategy |
 |---------|---------|---------|
-| 💎 Premium Savers | High balance, high credit, long tenure | Wealth management, VIP retention |
-| 📈 Growth Investors | Mid-life, asset growth, multi-product | Investment products, mortgages |
-| 💳 Active Spenders | High frequency, credit cards, young | Cashback rewards, credit limits |
-| 🌱 Entry-Level | Low balance, new customers, digital-native | Digital onboarding, savings education |
+| Premium Savers | High balance, high credit, long tenure | Wealth management, VIP retention |
+| Growth Investors | Mid-life, asset growth, multi-product | Investment products, mortgages |
+| Active Spenders | High frequency, credit cards, young | Cashback rewards, credit limits |
+| Entry-Level | Low balance, new customers, digital-native | Digital onboarding, savings education |
 
 ---
 
-## 📊 Key Results
+## Key Results
 
 | Metric | Value |
 |--------|-------|
@@ -68,11 +68,11 @@ This project solves two critical business problems:
 | Silhouette Score | ~0.25 |
 | Linear Regression R² | ~0.85+ |
 | Highest Growth Region | West (+20%), South (+15%) |
-| Best Revenue Cluster | 💎 Premium Savers |
+| Best Revenue Cluster | Premium Savers |
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 bank-customer-segmentation/
@@ -84,7 +84,7 @@ bank-customer-segmentation/
 
 ---
 
-## 🔗 Dataset
+## Dataset
 
 [Kaggle: Massive Bank Dataset (1 Million Rows)](https://www.kaggle.com/datasets/ksabishek/massive-bank-dataset-1-million-rows)
 
@@ -96,7 +96,7 @@ bank-customer-segmentation/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone & Install
 ```bash
@@ -115,10 +115,10 @@ Upload `bank_customer_segmentation.ipynb` to [Google Colab](https://colab.resear
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
 The app is deployed on **Streamlit Cloud**:
-> 🔗 [Live Demo](#) ← *(Add your Streamlit Cloud URL here after deployment)*
+> [Live Demo](#) ← *(Add your Streamlit Cloud URL here after deployment)*
 
 ### Deploy Your Own
 
@@ -126,11 +126,11 @@ The app is deployed on **Streamlit Cloud**:
 2. Go to [share.streamlit.io](https://share.streamlit.io)
 3. Connect your GitHub repo
 4. Set main file: `app.py`
-5. Click **Deploy** 🚀
+5. Click **Deploy**
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Dashboard Overview
 ![Dashboard](screenshots/dashboard.png)
@@ -146,7 +146,7 @@ The app is deployed on **Streamlit Cloud**:
 
 ---
 
-## 📋 Notebook Contents
+## Notebook Contents
 
 | Section | Description |
 |---------|-------------|
@@ -160,12 +160,15 @@ The app is deployed on **Streamlit Cloud**:
 
 ---
 
-## 👥 Team
+## Team
 
-- **[Your Name]** — Data Scientist / ML Engineer
+Saurabh Yadav
+Sakshi Shingole
+Manthan Bhosale
+Antriksh Sandesh Manwadkar
 
 ---
 
-## 📄 License
+## License
 
-MIT License — free to use, modify, and distribute.
+MIT License: free to use, modify, and distribute.
