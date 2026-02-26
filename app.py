@@ -23,13 +23,15 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
 
-/* ── RESET & BASE ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+/* ── BASE STYLES ── */
 html, body, .stApp {
-  font-family: 'IBM Plex Sans', monospace;
+  font-family: 'IBM Plex Sans', sans-serif;
   background: #0a0a0a;
   color: #e0e0e0;
+}
+.main .block-container {
+    padding: 2rem 2.5rem;
+    max-width: 1400px;
 }
 
 /* ── SIDEBAR ── */
@@ -416,14 +418,14 @@ def main():
         st.divider()
         section("Transaction volume over time")
         tr = df.groupby(['Year', 'Month', 'Date'])['Value'].sum().reset_index()
-        fig = px.line(tr, x='Date', y='Value', color_discrete_sequence=['#ffffff'])
+        fig = px.line(tr, x='Date', y='Value', color_discrete_sequence=['#ffffff'], title="")
         fig.update_traces(line_width=1.5)
         st.plotly_chart(chart(fig), width='stretch', theme=None)
 
         st.divider()
         section("Top 10 Locations by Volume")
         top_locs = loc_stats.sort_values('TotalValue', ascending=False).head(10)
-        fig2 = px.bar(top_locs, x='Location', y='TotalValue', color_discrete_sequence=['#ffffff'])
+        fig2 = px.bar(top_locs, x='Location', y='TotalValue', color_discrete_sequence=['#ffffff'], title="")
         fig2.update_traces(marker_line_width=0)
         st.plotly_chart(chart(fig2), width='stretch', theme=None)
 
@@ -439,9 +441,9 @@ def main():
         pca_df['Location'] = loc_stats['Location']
 
         fig = px.scatter(pca_df, x='PC1', y='PC2', color='Segment', text='Location',
-                         opacity=0.7, color_discrete_sequence=NEUTRAL_SEQ)
+                         opacity=0.7, color_discrete_sequence=NEUTRAL_SEQ, title="")
         fig.update_traces(marker_size=8, textposition='top center', textfont_size=8, textfont_family="IBM Plex Mono")
-        st.plotly_chart(chart(fig), width='stretch', theme=None)
+        st.plotly_chart(chart(fig), use_container_width=True, theme=None)
 
         st.divider()
         col1, col2 = st.columns([1, 2])
@@ -454,10 +456,14 @@ def main():
         with col2:
             section(f"Profile · {seg.lower()}")
             m = seg_df[['TotalValue','TotalTxns','AvgTxnValue','DistinctDomains']].mean().round(1)
-            m_df = pd.DataFrame({'Metric': m.index, 'Mean': m.values})
-            fig2 = px.bar(m_df, x='Metric', y='Mean', color_discrete_sequence=['#ffffff'])
-            fig2.update_traces(marker_line_width=0)
-            st.plotly_chart(chart(fig2), width='stretch', theme=None)
+            
+            mc1, mc2 = st.columns(2)
+            with mc1:
+                kv("Avg Quarterly Vol", f"₹{m['TotalValue']/1e6:.1f}M")
+                kv("Avg Quarterly Txns", f"{m['TotalTxns']:,.0f}")
+            with mc2:
+                kv("Avg Value / Txn", f"₹{m['AvgTxnValue']:,.0f}")
+                kv("Domain Variety", f"{m['DistinctDomains']:.1f}")
 
         st.divider()
         section("Locations in this segment")
@@ -476,7 +482,7 @@ def main():
 
         c1, c2 = st.columns(2)
         with c1:
-            fig = px.bar(dom_df, x='Domain', y='TotalValue', color_discrete_sequence=['#ffffff'])
+            fig = px.bar(dom_df, x='Domain', y='TotalValue', color_discrete_sequence=['#ffffff'], title="")
             fig.update_traces(marker_line_width=0)
             fig.update_layout(title_text="Total Transaction Volume")
             st.plotly_chart(chart(fig), width='stretch', theme=None)
@@ -491,7 +497,7 @@ def main():
         dom_time = df.groupby(['Year', 'Quarter', 'Domain'])['Value'].sum().reset_index()
         dom_time['Period'] = dom_time['Year'].astype(str) + " Q" + dom_time['Quarter'].astype(str)
         fig3 = px.bar(dom_time, x='Period', y='Value', color='Domain', 
-                      barmode='stack', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"])
+                      barmode='stack', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"], title="")
         fig3.update_traces(marker_line_width=0)
         st.plotly_chart(chart(fig3), width='stretch', theme=None)
 
@@ -532,7 +538,7 @@ def main():
             fdf = pd.DataFrame(rows)
             fig = px.bar(fdf, x='Period', y='Forecast', color='Domain',
                          barmode='group', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"],
-                         labels={'Forecast':'Forecast Volume (₹)'})
+                         labels={'Forecast':'Forecast Volume (₹)'}, title="")
             fig.update_traces(marker_line_width=0)
             st.plotly_chart(chart(fig), width='stretch', theme=None)
 
