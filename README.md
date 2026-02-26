@@ -122,16 +122,7 @@ Upload `bank_customer_segmentation.ipynb` to [Google Colab](https://colab.resear
 ## Deployment
 
 The app is deployed on **Streamlit Cloud**:
-> [Live Demo](#) ← *(Add your Streamlit Cloud URL here after deployment)*
-
-### Deploy Your Own
-
-1. Push this repo to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Connect your GitHub repo
-4. Set main file: `app.py`
-5. Click **Deploy**
-
+> [Live Demo](https://bank-customer-segmentation-a7wg4smfkv2rcqiaute5mf.streamlit.app/) 
 ---
 
 ## Screenshots
@@ -139,11 +130,8 @@ The app is deployed on **Streamlit Cloud**:
 ### Dashboard Overview
 <img width="1470" height="652" alt="Screenshot 2026-02-26 at 11 06 14 PM" src="https://github.com/user-attachments/assets/86dfda99-8e73-4e12-be40-f40c24d119c9" />
 
-
 ### Monthly Revenue Trend
 <img width="970" height="426" alt="Screenshot 2026-02-26 at 11 07 45 PM" src="https://github.com/user-attachments/assets/54b40502-0ac3-42a1-b24d-9e7a6764c29a" />
-
-
 
 ### Top 10 Locations by Processing Volume
 <img width="1067" height="505" alt="Screenshot 2026-02-26 at 11 08 05 PM" src="https://github.com/user-attachments/assets/bd6a5ee8-0a32-48a8-833a-f66e3b9ded49" />
@@ -180,9 +168,3 @@ The app is deployed on **Streamlit Cloud**:
 - Sakshi Shingole
 - Manthan Bhosale
 - Antriksh Sandesh Manwadkar
-
----
-
-## License
-
-MIT License: free to use, modify, and distribute.
