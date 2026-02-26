@@ -87,6 +87,8 @@ bank-customer-segmentation/
 ## Dataset
 
 [Kaggle: Massive Bank Dataset (1 Million Rows)](https://www.kaggle.com/datasets/ksabishek/massive-bank-dataset-1-million-rows)
+The local `bankdataset.csv` file, originally converted from the "Massive Bank Dataset" on Kaggle, is used for this project.
+
 
 **Key Features:**
 - CustomerID, Age, Gender, Region
