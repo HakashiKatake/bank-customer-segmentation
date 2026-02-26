@@ -162,10 +162,10 @@ The app is deployed on **Streamlit Cloud**:
 
 ## Team
 
-Saurabh Yadav
-Sakshi Shingole
-Manthan Bhosale
-Antriksh Sandesh Manwadkar
+- Saurabh Yadav
+- Sakshi Shingole
+- Manthan Bhosale
+- Antriksh Sandesh Manwadkar
 
 ---
 
