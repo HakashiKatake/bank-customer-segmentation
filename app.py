@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 # ─── DESIGN SYSTEM ─────────────────────────────────────────────
-# Aesthetic: Industrial Utilitarian — monochrome, sharp
+# Aesthetic: Industrial Utilitarian — monochrome, sharp, editorial
 # Fonts: IBM Plex Mono (display) + IBM Plex Sans (body)
 # No gradients. No border-radius. No hover animations.
 # Strict neutral palette: white, off-white, mid-gray, charcoal, near-black.
@@ -53,31 +53,6 @@ section[data-testid="stSidebar"] [data-testid="stInfo"] {
   color: #8a8a82 !important;
 }
 section[data-testid="stSidebar"] [data-testid="stInfo"] * { color: #8a8a82 !important; }
-
-/* ── SIDEBAR PADDING & LAYOUT FIXES ── */
-[data-testid="stSidebarHeader"] {
-  padding: 0 !important;
-  min-height: 0 !important;
-}
-[data-testid="stSidebarUserContent"] {
-  padding-top: 1.5rem !important;
-  padding-bottom: 1rem !important;
-  display: flex;
-  flex-direction: column;
-}
-[data-testid="stSidebarUserContent"] > div:first-child {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-[data-testid="stSidebarUserContent"] > div:first-child > div:first-child {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-[data-testid="stSidebarUserContent"] > div:first-child > div:first-child > div:last-child {
-  margin-top: auto;
-}
 
 /* ── MAIN AREA ── */
 .main .block-container { padding: 2rem 2.5rem; max-width: 1400px; }
@@ -325,47 +300,41 @@ def main():
 
     # ── SIDEBAR ─────────────────────────────────────────────
     with st.sidebar:
-        # ── SIDEBAR HEADER
-        with st.container():
-            st.markdown("""
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:0.95rem;
-                        letter-spacing:0.06em; font-weight:500; color:#f0efe8;
-                        padding:0px 0 4px;">
-              BANKSEG <span style='color:#6a6a60;'>/ AI</span>
-            </div>
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
-                        color:#5a5a52; letter-spacing:0.1em; text-transform:uppercase;
-                        padding-bottom:20px;">
-              Customer Intelligence
-            </div>
-            """, unsafe_allow_html=True)
-            st.divider()
+        st.markdown("""
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.95rem;
+                    letter-spacing:0.06em; font-weight:500; color:#f0efe8;
+                    padding:16px 0 4px;">
+          BANKSEG <span style='color:#6a6a60;'>/ AI</span>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+                    color:#5a5a52; letter-spacing:0.1em; text-transform:uppercase;
+                    padding-bottom:20px;">
+          Customer Intelligence
+        </div>
+        """, unsafe_allow_html=True)
+        st.divider()
 
-        # ── SIDEBAR MAIN BODY
-        with st.container():
-            page = st.radio("Navigate", [
-                "Overview",
-                "Segments",
-                "Regions",
-                "Forecast",
-                "Predictor"
-            ], label_visibility="collapsed")
+        page = st.radio("Navigate", [
+            "Overview",
+            "Segments",
+            "Regions",
+            "Forecast",
+            "Predictor"
+        ], label_visibility="collapsed")
 
-        # ── SIDEBAR FOOTER
-        with st.container():
-            st.divider()
-            st.markdown("""
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
-                        text-transform:uppercase; letter-spacing:0.1em; color:#5a5a52;
-                        padding-bottom:8px;">
-              Dataset
-            </div>""", unsafe_allow_html=True)
-            st.info("50,000 customers\n5 regions / 4 segments")
-            st.markdown("""
-            <a href="https://www.kaggle.com/datasets/ksabishek/massive-bank-dataset-1-million-rows"
-               style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#8a8a82; display:block; padding-bottom:1rem;">
-              Kaggle: Massive Bank Dataset →
-            </a>""", unsafe_allow_html=True)
+        st.divider()
+        st.markdown("""
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+                    text-transform:uppercase; letter-spacing:0.1em; color:#5a5a52;
+                    padding-bottom:8px;">
+          Dataset
+        </div>""", unsafe_allow_html=True)
+        st.info(f"50,000 customers\n5 regions / 4 segments")
+        st.markdown("""
+        <a href="https://www.kaggle.com/datasets/ksabishek/massive-bank-dataset-1-million-rows"
+           style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem; color:#8a8a82;">
+          Kaggle: Massive Bank Dataset →
+        </a>""", unsafe_allow_html=True)
 
     # ── HEADER ──────────────────────────────────────────────
     st.markdown("""
