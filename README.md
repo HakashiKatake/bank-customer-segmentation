@@ -20,6 +20,8 @@ This project solves two critical business problems:
 1. **Who are our customers?** — Identify distinct behavioral clusters using K-Means
 2. **Where is revenue growing?** — Forecast regional transaction volume using Linear Regression
 
+Google Collab link: https://colab.research.google.com/drive/1Kh7Jior64Y8o1eT6lE-At2MSWFzzlni7?usp=sharing
+
 ---
 
 ## Economic Concepts Applied
@@ -87,6 +89,8 @@ bank-customer-segmentation/
 ## Dataset
 
 [Kaggle: Massive Bank Dataset (1 Million Rows)](https://www.kaggle.com/datasets/ksabishek/massive-bank-dataset-1-million-rows)
+The local `bankdataset.csv` file, originally converted from the "Massive Bank Dataset" on Kaggle, is used for this project.
+
 
 **Key Features:**
 - CustomerID, Age, Gender, Region
@@ -111,38 +115,36 @@ streamlit run app.py
 ```
 
 ### 3. Open Colab Notebook
-Upload `bank_customer_segmentation.ipynb` to [Google Colab](https://colab.research.google.com/)
+Upload `bank_customer_segmentation.ipynb` to [Google Colab](https://colab.research.google.com/drive/1Kh7Jior64Y8o1eT6lE-At2MSWFzzlni7?usp=sharing)
 
 ---
 
 ## Deployment
 
 The app is deployed on **Streamlit Cloud**:
-> [Live Demo](#) ← *(Add your Streamlit Cloud URL here after deployment)*
-
-### Deploy Your Own
-
-1. Push this repo to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Connect your GitHub repo
-4. Set main file: `app.py`
-5. Click **Deploy**
-
+> [Live Demo](https://bank-customer-segmentation-a7wg4smfkv2rcqiaute5mf.streamlit.app/) 
 ---
 
 ## Screenshots
 
 ### Dashboard Overview
-![Dashboard](screenshots/dashboard.png)
+<img width="1470" height="652" alt="Screenshot 2026-02-26 at 11 06 14 PM" src="https://github.com/user-attachments/assets/86dfda99-8e73-4e12-be40-f40c24d119c9" />
 
-### Customer Clusters (PCA)
-![Clusters](screenshots/clusters.png)
+### Monthly Revenue Trend
+<img width="970" height="426" alt="Screenshot 2026-02-26 at 11 07 45 PM" src="https://github.com/user-attachments/assets/54b40502-0ac3-42a1-b24d-9e7a6764c29a" />
 
-### Regional Forecast
-![Forecast](screenshots/forecast.png)
+### Top 10 Locations by Processing Volume
+<img width="1067" height="505" alt="Screenshot 2026-02-26 at 11 08 05 PM" src="https://github.com/user-attachments/assets/bd6a5ee8-0a32-48a8-833a-f66e3b9ded49" />
 
-### Single Customer Predictor
-![Predictor](screenshots/predictor.png)
+### Domain Distribution
+<img width="1040" height="480" alt="Screenshot 2026-02-26 at 11 08 56 PM" src="https://github.com/user-attachments/assets/8b39ffee-7c28-472a-81ed-62ad3bef7958" />
+
+### Clusters using PCA
+<img width="1052" height="473" alt="Screenshot 2026-02-26 at 11 10 10 PM" src="https://github.com/user-attachments/assets/467ab7eb-6c95-46d5-9b46-8fdeda81a9af" />
+
+### Actual vs Predicted
+<img width="813" height="461" alt="Screenshot 2026-02-26 at 11 10 48 PM" src="https://github.com/user-attachments/assets/d2002cf4-0970-4ed0-a9b7-7da25093f86b" />
+
 
 ---
 
@@ -166,9 +168,3 @@ The app is deployed on **Streamlit Cloud**:
 - Sakshi Shingole
 - Manthan Bhosale
 - Antriksh Sandesh Manwadkar
-
----
-
-## License
-
-MIT License: free to use, modify, and distribute.
