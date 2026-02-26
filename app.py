@@ -293,7 +293,7 @@ def train_models(df):
     # 2. Linear Regression (Forecasting by Domain & Location over Time)
     reg_df = df.groupby(['Location', 'Domain', 'Year', 'Quarter']).agg(
         TotalValue=('Value', 'sum'),
-        TotalTxns=('Transaction_count', 'sum')
+        AvgDailyTxns=('Transaction_count', 'mean')
     ).reset_index()
     
     reg_df['TimeIndex'] = (reg_df['Year'] - reg_df['Year'].min())*4 + reg_df['Quarter']
@@ -304,7 +304,7 @@ def train_models(df):
     reg_df['LocEnc'] = le_loc.fit_transform(reg_df['Location'])
     reg_df['DomEnc'] = le_dom.fit_transform(reg_df['Domain'])
     
-    rf = ['TimeIndex', 'LocEnc', 'DomEnc', 'TotalTxns']
+    rf = ['TimeIndex', 'LocEnc', 'DomEnc', 'AvgDailyTxns']
     lr_sc = StandardScaler()
     Xr = lr_sc.fit_transform(reg_df[rf])
     lr = LinearRegression().fit(Xr, reg_df['TotalValue'])
@@ -563,7 +563,7 @@ def main():
         with c2:
             dom = st.selectbox("Business Domain", domains)
         with c3:
-            est_txns = st.number_input("Estimated Txn Volume (Scale)", 100, 10000, 1500)
+            est_txns = st.number_input("ESTIMATED DAILY TRANSACTIONS", 100, 10000, 1500)
 
         st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
         run = st.button("CALCULATE PROJECTION")
