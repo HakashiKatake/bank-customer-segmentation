@@ -235,11 +235,6 @@ NEUTRAL = dict(
     font=dict(family="IBM Plex Mono", color="#e0e0e0"),
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
-    title=dict(
-        font=dict(family="IBM Plex Mono", size=14, color="#ffffff"),
-        x=0, # Left align title
-        xanchor="left"
-    ),
     legend=dict(
         font=dict(family="IBM Plex Mono", size=11, color="#e0e0e0"),
         bgcolor="rgba(0,0,0,0)"
@@ -319,6 +314,15 @@ def train_models(df):
 
 def chart(fig):
     fig.update_layout(**NEUTRAL, margin=dict(l=20, r=20, t=40, b=20), height=340)
+    # Force empty title if None to avoid JS 'undefined'
+    if fig.layout.title.text is None:
+        fig.update_layout(title_text="")
+    
+    fig.update_layout(
+        title_font=dict(family="IBM Plex Mono", size=14, color="#ffffff"),
+        title_x=0,
+        title_xanchor="left"
+    )
     fig.update_xaxes(showgrid=True, gridwidth=1)
     fig.update_yaxes(showgrid=True, gridwidth=1)
     return fig
@@ -414,14 +418,14 @@ def main():
         tr = df.groupby(['Year', 'Month', 'Date'])['Value'].sum().reset_index()
         fig = px.line(tr, x='Date', y='Value', color_discrete_sequence=['#ffffff'])
         fig.update_traces(line_width=1.5)
-        st.plotly_chart(chart(fig), width='stretch')
+        st.plotly_chart(chart(fig), width='stretch', theme=None)
 
         st.divider()
         section("Top 10 Locations by Volume")
         top_locs = loc_stats.sort_values('TotalValue', ascending=False).head(10)
         fig2 = px.bar(top_locs, x='Location', y='TotalValue', color_discrete_sequence=['#ffffff'])
         fig2.update_traces(marker_line_width=0)
-        st.plotly_chart(chart(fig2), width='stretch')
+        st.plotly_chart(chart(fig2), width='stretch', theme=None)
 
 
     elif page == "Market Segments":
@@ -437,7 +441,7 @@ def main():
         fig = px.scatter(pca_df, x='PC1', y='PC2', color='Segment', text='Location',
                          opacity=0.7, color_discrete_sequence=NEUTRAL_SEQ)
         fig.update_traces(marker_size=8, textposition='top center', textfont_size=8, textfont_family="IBM Plex Mono")
-        st.plotly_chart(chart(fig), width='stretch')
+        st.plotly_chart(chart(fig), width='stretch', theme=None)
 
         st.divider()
         col1, col2 = st.columns([1, 2])
@@ -453,7 +457,7 @@ def main():
             m_df = pd.DataFrame({'Metric': m.index, 'Mean': m.values})
             fig2 = px.bar(m_df, x='Metric', y='Mean', color_discrete_sequence=['#ffffff'])
             fig2.update_traces(marker_line_width=0)
-            st.plotly_chart(chart(fig2), width='stretch')
+            st.plotly_chart(chart(fig2), width='stretch', theme=None)
 
         st.divider()
         section("Locations in this segment")
@@ -475,7 +479,7 @@ def main():
             fig = px.bar(dom_df, x='Domain', y='TotalValue', color_discrete_sequence=['#ffffff'])
             fig.update_traces(marker_line_width=0)
             fig.update_layout(title_text="Total Transaction Volume")
-            st.plotly_chart(chart(fig), width='stretch')
+            st.plotly_chart(chart(fig), width='stretch', theme=None)
         with c2:
             fig2 = px.bar(dom_df, x='Domain', y='TotalTxns', color_discrete_sequence=['#8a8a82'])
             fig2.update_traces(marker_line_width=0)
@@ -489,7 +493,7 @@ def main():
         fig3 = px.bar(dom_time, x='Period', y='Value', color='Domain', 
                       barmode='stack', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"])
         fig3.update_traces(marker_line_width=0)
-        st.plotly_chart(chart(fig3), width='stretch')
+        st.plotly_chart(chart(fig3), width='stretch', theme=None)
 
 
     elif page == "Forecast":
@@ -530,7 +534,7 @@ def main():
                          barmode='group', color_discrete_sequence=CATEGORICAL + ["#3a3a3a", "#7a7a7a"],
                          labels={'Forecast':'Forecast Volume (₹)'})
             fig.update_traces(marker_line_width=0)
-            st.plotly_chart(chart(fig), width='stretch')
+            st.plotly_chart(chart(fig), width='stretch', theme=None)
 
             st.divider()
             section("Total forecast summary")
